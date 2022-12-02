@@ -2,6 +2,8 @@ import { KeyboardAvoidingView, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Button, Input, Image } from "@rneui/themed";
 import { auth } from "../lib/firebase";
+import { googleAuthProvider } from "../lib/firebase";
+import { FontAwesome } from "@expo/vector-icons";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -20,6 +22,12 @@ const LoginScreen = ({ navigation }) => {
     auth
       .signInWithEmailAndPassword(email, password)
       .catch((error) => alert(error));
+  };
+
+  // Sign in with Google button
+
+  const signInWithGoogle = async () => {
+    await auth.signInWithPopup(googleAuthProvider);
   };
 
   return (
