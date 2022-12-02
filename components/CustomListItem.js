@@ -1,9 +1,25 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ListItem, Avatar } from "@rneui/themed";
-import { auth } from "../lib/firebase";
+import { auth, db } from "../lib/firebase";
 
 const CustomListItem = ({ id, chatName, enterChat }) => {
+
+  const [chatMessages, setChatMessages] = useState([]);
+
+  useEffect(() => {
+    const unsubscribe = db
+      .collection("chats")
+      .doc(id)
+      .collection("messages")
+      .orderBy("timestamp", "desc")
+      .onSnapshot((snapshot) =>
+        setChatMessages(snapshot.docs.map((doc) => doc.data()))
+      );
+
+    return unsubscribe;
+  }, []);
+
   return (
     <ListItem onPress={() => enterChat(id, chatName)} key={id} bottomDivider>
       <Avatar
@@ -12,7 +28,7 @@ const CustomListItem = ({ id, chatName, enterChat }) => {
         rounded
         source={{
           uri:
-            //   chatMessages?.[0]?.photoURL ||
+            chatMessages?.[0]?.photoURL ||
             `https://robohash.org/${auth.currentUser}.png`,
         }}
       />
@@ -26,7 +42,8 @@ const CustomListItem = ({ id, chatName, enterChat }) => {
           numberOfLines={1}
           ellipsizeMode="tail"
         >
-          Abc
+          {/* Chat Message */}
+          {chatMessages?.[0]?.displayName}: {chatMessages?.[0]?.message}
         </ListItem.Subtitle>
       </ListItem.Content>
     </ListItem>

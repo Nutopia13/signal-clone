@@ -30,13 +30,17 @@ const ChatScreen = ({ navigation, route }) => {
         <View style={styles.headerTitle}>
           <Avatar
             rounded
-            source={{ uri: "https://robohash.org/Hello-World.png" }}
+            source={{
+              uri:
+                messages[0]?.data.photoURL ||
+                `https://robohash.org/${auth.currentUser}.png`,
+            }}
           />
           <Text style={styles.headerText}>{route.params.chatName}</Text>
         </View>
       ),
       headerLeft: () => (
-        <TouchableOpacity style={styles.headerLeft} onPress={navigation.goBack}>
+        <TouchableOpacity onPress={navigation.goBack}>
           <AntDesign name="arrowleft" size={24} color="white" />
         </TouchableOpacity>
       ),
@@ -51,7 +55,7 @@ const ChatScreen = ({ navigation, route }) => {
         </View>
       ),
     });
-  }, [navigation]);
+  }, [navigation, messages]);
 
   const sendMessage = () => {
     Keyboard.dismiss();
@@ -92,7 +96,7 @@ const ChatScreen = ({ navigation, route }) => {
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <>
-            <ScrollView>
+            <ScrollView contentContainerStyle={{ paddingTop: 15 }}>
               {messages.map(({ id, data }) =>
                 data.email === auth.currentUser.email ? (
                   <View key={id} style={styles.receiver}>
@@ -108,7 +112,7 @@ const ChatScreen = ({ navigation, route }) => {
                       rounded
                       size={30}
                       source={{
-                        uri: data.photoURL,
+                        uri: data.photoURL || `https://robohash.org/${auth.currentUser}.png`
                       }}
                     />
                     <Text style={styles.receiverText}>{data.message}</Text>
@@ -127,10 +131,11 @@ const ChatScreen = ({ navigation, route }) => {
                       rounded
                       size={30}
                       source={{
-                        uri: data.photoURL,
+                        uri: data.photoURL || `https://robohash.org/${auth.currentUser}.png`,
                       }}
                     />
                     <Text style={styles.senderText}>{data.message}</Text>
+                    <Text style={styles.senderName}>{data.displayName}</Text>
                   </View>
                 )
               )}
@@ -226,5 +231,11 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     marginLeft: 10,
     marginBottom: 15,
+  },
+  senderName: {
+    left: 10,
+    paddingRight: 10,
+    fontSize: 10,
+    color: "white",
   },
 });
