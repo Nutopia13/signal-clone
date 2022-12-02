@@ -28,6 +28,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "3e9e4919-5982-4701-9087-a14df71bddc0"
+      }
+    },
+    "owner": "vladyslavn13"
   }
 }
